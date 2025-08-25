@@ -174,8 +174,21 @@ return {
 		vim.keymap.set("n", "<leader>ox", "<cmd>OverseerRun Clean<CR>", { desc = "Clean build" })
 		vim.keymap.set("n", "<leader>of", "<cmd>OverseerQuickAction open float<CR>",
 			{ desc = "Open Floating Terminal" })
-		vim.keymap.set("n", "<leader>oo", "<cmd>OverseerQuickAction open vsplit<CR>",
-			{ desc = "Open vsplit Terminal" })
+
+		-- Open vsplit terminal or fallback to normal split in cwd
+		vim.keymap.set("n", "<leader>oo", function()
+			local tasks = overseer.list_tasks()
+			if #tasks > 0 then
+				-- open Overseer vsplit for running tasks
+				vim.cmd("OverseerQuickAction open vsplit")
+			else
+				-- fallback: open normal split terminal in current cwd
+				local cwd = vim.fn.getcwd()
+				vim.cmd("vsplit | terminal")
+				vim.cmd("lcd " .. cwd)
+			end
+		end, { desc = "Open vsplit Terminal or fallback split in cwd" })
+
 		vim.keymap.set("n", "<leader>ol", "<cmd>OverseerToggle<CR>", { desc = "Open running list" })
 	end,
 }
