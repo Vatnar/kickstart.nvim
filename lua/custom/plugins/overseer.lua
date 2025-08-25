@@ -182,9 +182,12 @@ return {
 				-- open Overseer vsplit for running tasks
 				vim.cmd("OverseerQuickAction open vsplit")
 			else
+				vim.opt.shell = "/usr/bin/fish" -- adjust path if fish is elsewhere
+				vim.opt.shellcmdflag = "-c"
+
 				-- fallback: open normal split terminal in current cwd
 				local cwd = vim.fn.getcwd()
-				vim.cmd("vsplit | terminal")
+				vim.cmd("vsplit | terminal ")
 				vim.cmd("lcd " .. cwd)
 			end
 		end, { desc = "Open vsplit Terminal or fallback split in cwd" })
