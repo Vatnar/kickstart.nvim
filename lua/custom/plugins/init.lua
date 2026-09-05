@@ -1,14 +1,22 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
+-- Load all custom plugins in a deterministic, dependency-safe order.
 --
--- See the kickstart.nvim README for more information
+-- Each file here owns its own `vim.pack.add()` + `setup()` calls, mirroring
+-- the file layout in lua/custom/plugins/*.lua. Order matters when a module
+-- depends on another (e.g. ideavim-keymaps requires telescope.builtin).
 
--- Iterate over all Lua files in the plugins directory and load them.
--- `vim.fs.dir()` iteration order is unspecified and must not be relied upon.
-local plugins_dir = vim.fs.joinpath(vim.fn.stdpath 'config', 'lua', 'custom', 'plugins')
-for file_name, type in vim.fs.dir(plugins_dir, { follow = true }) do
-  if (type == 'file' or type == 'link') and file_name:match '%.lua$' and file_name ~= 'init.lua' then
-    local module = file_name:gsub('%.lua$', '')
-    require('custom.plugins.' .. module)
-  end
+local plugins = {
+  'options',
+  'keymaps',
+  'ui',
+  'telescope',
+  'lsp',
+  'conform',
+  'blink',
+  'treesitter',
+  'ideavim-keymaps',
+  'nerdtree',
+}
+
+for _, name in ipairs(plugins) do
+  require('custom.plugins.' .. name)
 end
