@@ -9,6 +9,8 @@ require('conform').setup {
     local enabled_filetypes = {
       -- lua = true,
       -- python = true,
+      c = true,
+      cpp = true,
     }
     if enabled_filetypes[vim.bo[bufnr].filetype] then
       return { timeout_ms = 500 }
@@ -23,6 +25,8 @@ require('conform').setup {
     -- rust = { 'rustfmt' },
     -- python = { "isort", "black" },
     -- javascript = { "prettierd", "prettier", stop_after_first = true },
+    c = { 'clang-format' },
+    cpp = { 'clang-format' },
   },
 }
 

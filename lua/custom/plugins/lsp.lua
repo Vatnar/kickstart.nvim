@@ -65,7 +65,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- Language servers. Clangd + stylua + Lua LS. Add/remove as needed.
 ---@type table<string, vim.lsp.Config>
 local servers = {
-  clangd = {},
+  -- clangd: C/C++. Pass --clang-tidy so clangd runs the checks from the
+  -- project's `.clang-tidy` file (if present) and reports them as diagnostics.
+  clangd = {
+    cmd = { 'clangd', '--clang-tidy' },
+  },
   -- gopls = {},
   -- pyright = {},
   -- tsc = {},
@@ -117,6 +121,11 @@ require('mason-lspconfig').setup {
 }
 
 local ensure_installed = vim.tbl_keys(servers or {})
+vim.list_extend(ensure_installed, {
+  'clangd', -- C/C++ language server (used for introspection + fallback formatting)
+  'clang-format', -- C/C++ formatting (used by conform.nvim)
+  'clang-tidy', -- C/C++ linting (clangd runs it when given `--clang-tidy`)
+})
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
 for name, server in pairs(servers) do

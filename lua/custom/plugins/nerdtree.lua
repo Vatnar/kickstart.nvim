@@ -6,13 +6,10 @@ vim.pack.add { gh 'preservim/nerdtree' }
 vim.g.NERDTreeShowHidden = 1
 vim.g.NERDTreeAutoDeleteBuffer = 1
 
-local function toggle_nerdtree()
-  if vim.fn.exists 'g:NERDTree' == 1 and vim.fn.bufexists(vim.fn.bufnr 'NERD_tree_*') ~= 0 then
-    vim.cmd 'NERDTreeToggle'
-  else
-    vim.cmd 'NERDTree'
-  end
-end
-
-vim.keymap.set('n', '<leader>fb', toggle_nerdtree, { desc = 'Toggle NERD[F]ile [B]rowser / tree' })
-vim.keymap.set('n', '<leader>ft', toggle_nerdtree, { desc = 'Toggle NERD[T]ree' })
+-- Toggle the tree; if you're already inside it, this puts you back in the file,
+-- and vice-versa. Window navigation (<leader>vh/vl or <C-w>h/l) also moves
+-- between the tree and your file since NERDTree opens as a split.
+vim.keymap.set('n', '<leader>fb', '<Cmd>NERDTreeToggle<CR>', { desc = 'Toggle NERD[F]ile [B]rowser / tree' })
+vim.keymap.set('n', '<leader>ft', '<Cmd>NERDTreeToggle<CR>', { desc = 'Toggle NERD[T]ree' })
+-- Reveal the current file in the tree
+vim.keymap.set('n', '<leader>ff', '<Cmd>NERDTreeFind<CR>', { desc = 'NERDTree [F]ind current file' })

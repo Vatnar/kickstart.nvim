@@ -55,5 +55,3 @@ local telescope_builtin = require 'telescope.builtin'
 map('n', '<leader>se', telescope_builtin.find_files, { desc = '[S]earch [E]verywhere' })
 -- Go to Symbol (document symbols)
 map('n', '<leader>so', telescope_builtin.lsp_document_symbols, { desc = '[S]earch sy[m]bol / Go to Symbol' })
--- Recent Files
-map('n', '<leader>sr', telescope_builtin.oldfiles, { desc = '[S]earch [R]ecent Files' })
