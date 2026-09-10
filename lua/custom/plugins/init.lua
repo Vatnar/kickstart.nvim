@@ -9,6 +9,7 @@ local plugins = {
   'keymaps',
   'ui',
   'telescope',
+  'vim-pack-ui',
   'lsp',
   'conform',
   'blink',

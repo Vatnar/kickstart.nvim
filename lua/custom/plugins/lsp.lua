@@ -2,8 +2,7 @@
 
 local gh = function(repo) return 'https://github.com/' .. repo end
 
-vim.pack.add { gh 'j-hui/fidget.nvim' }
-require('fidget').setup {}
+vim.pack.add { gh 'j-hui/fidget.nvim' } require('fidget').setup {}
 
 -- Buffer-local LSP keymaps and feature autocmds, run when a server attaches
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -21,8 +20,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Switch between header and source file (clangd extension, IdeaVim: gh)
     map('gh', function()
       local params = vim.lsp.util.make_text_document_params(event.buf)
-      vim.lsp.buf_request(event.buf, 'textDocument/switchSourceHeader', params, function(_, _, result)
-        if result then vim.cmd.edit(result) end
+      vim.lsp.buf_request(event.buf, 'textDocument/switchSourceHeader', params, 
+    function(_, result, _)
+        if not result then return end
+
+        local uri
+        if type(result) == 'table' and result.uri then
+          uri = result.uri
+        elseif type(result) == 'string' then
+          uri = result
+        else
+          return
+        end
+
+        local fname = vim.uri_to_fname(uri)
+        if fname and fname ~= '' then
+          vim.cmd.edit({ fname })
+        end
       end)
     end, '[G]oto [H]eader/[S]ource')
 
@@ -71,7 +85,7 @@ local servers = {
     cmd = { 'clangd', '--clang-tidy' },
   },
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   -- tsc = {},
   -- rust_analyzer = {},
 
@@ -124,7 +138,7 @@ local ensure_installed = vim.tbl_keys(servers or {})
 vim.list_extend(ensure_installed, {
   'clangd', -- C/C++ language server (used for introspection + fallback formatting)
   'clang-format', -- C/C++ formatting (used by conform.nvim)
-  'clang-tidy', -- C/C++ linting (clangd runs it when given `--clang-tidy`)
+  'cmake-language-server',
 })
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

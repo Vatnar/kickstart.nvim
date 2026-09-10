@@ -28,6 +28,11 @@ require('conform').setup {
     c = { 'clang-format' },
     cpp = { 'clang-format' },
   },
+  formatters = {
+    clang_format = {
+      prepend_args = {"--style=file" },
+    },
+  },
 }
 
 vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = '[F]ormat buffer' })
